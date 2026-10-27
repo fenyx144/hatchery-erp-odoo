@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hatchery_breeder_flock_list" model="ir.ui.view">
+        <field name="name">hatchery.breeder.flock.list</field>
+        <field name="model">hatchery.breeder.flock</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="farm_id"/>
+                <field name="house"/>
+                <field name="genetic_line"/>
+                <field name="hatch_date"/>
+                <field name="age_weeks"/>
+                <field name="health_status"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hatchery_breeder_flock_form" model="ir.ui.view">
+        <field name="name">hatchery.breeder.flock.form</field>
+        <field name="model">hatchery.breeder.flock</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="farm_id"/>
+                            <field name="house"/>
+                            <field name="genetic_line"/>
+                        </group>
+                        <group>
+                            <field name="hatch_date"/>
+                            <field name="age_weeks"/>
+                            <field name="health_status"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hatchery_breeder_flock_search" model="ir.ui.view">
+        <field name="name">hatchery.breeder.flock.search</field>
+        <field name="model">hatchery.breeder.flock</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="farm_id"/>
+                <field name="house"/>
+                <field name="genetic_line"/>
+                <field name="health_status"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_farm" string="Granja" context="{'group_by': 'farm_id'}"/>
+                    <filter name="group_line" string="Línea genética" context="{'group_by': 'genetic_line'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hatchery_breeder_flock" model="ir.actions.act_window">
+        <field name="name">Lotes reproductores</field>
+        <field name="res_model">hatchery.breeder.flock</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

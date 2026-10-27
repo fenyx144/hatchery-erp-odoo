@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="partner_demo_client" model="res.partner">
+        <field name="name">Cliente de demostración</field>
+        <field name="company_type">company</field>
+    </record>
+
+    <record id="plant_demo" model="hatchery.plant">
+        <field name="name">Planta de demostración</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="tz">America/Lima</field>
+    </record>
+
+    <record id="farm_demo_breeder" model="hatchery.farm">
+        <field name="name">Granja reproductora de demostración</field>
+        <field name="code">GRA-DEMO-REP</field>
+        <field name="kind">breeder</field>
+        <field name="address">Carretera de demostración km 12</field>
+        <field name="senasa_code">SEN-DEMO-REP</field>
+        <field name="receiving_capacity_day">40000</field>
+    </record>
+    <record id="farm_demo_broiler" model="hatchery.farm">
+        <field name="name">Granja de engorde de demostración</field>
+        <field name="code">GRA-DEMO-ENG</field>
+        <field name="kind">broiler</field>
+        <field name="address">Anexo de demostración s/n</field>
+        <field name="senasa_code">SEN-DEMO-ENG</field>
+        <field name="receiving_capacity_day">25000</field>
+    </record>
+    <record id="farm_demo_client" model="hatchery.farm">
+        <field name="name">Granja cliente de demostración</field>
+        <field name="code">GRA-DEMO-CLI</field>
+        <field name="kind">client</field>
+        <field name="partner_id" ref="partner_demo_client"/>
+        <field name="address">Fundo de demostración</field>
+        <field name="receiving_capacity_day">8000</field>
+    </record>
+
+    <record id="flock_demo" model="hatchery.breeder.flock">
+        <field name="farm_id" ref="farm_demo_breeder"/>
+        <field name="house">Galpón A</field>
+        <field name="genetic_line">Línea de demostración</field>
+        <field name="hatch_date">2025-10-28</field>
+        <field name="health_status">Sin novedad</field>
+    </record>
+
+    <record id="model_demo_setter" model="hatchery.machine.model">
+        <field name="brand">Marca de demostración</field>
+        <field name="model">Incubadora demo 4800</field>
+        <field name="kind">setter</field>
+        <field name="capacity_eggs">4800</field>
+        <field name="trolleys">4</field>
+        <field name="trays_per_trolley">16</field>
+        <field name="eggs_per_tray">75</field>
+        <field name="cleaning_days">1</field>
+    </record>
+    <record id="model_demo_hatcher" model="hatchery.machine.model">
+        <field name="brand">Marca de demostración</field>
+        <field name="model">Nacedora demo 4800</field>
+        <field name="kind">hatcher</field>
+        <field name="capacity_eggs">4800</field>
+        <field name="trolleys">4</field>
+        <field name="trays_per_trolley">16</field>
+        <field name="eggs_per_tray">75</field>
+        <field name="cleaning_days">1</field>
+    </record>
+    <record id="model_demo_chamber" model="hatchery.machine.model">
+        <field name="brand">Marca de demostración</field>
+        <field name="model">Cámara demo</field>
+        <field name="kind">chamber</field>
+        <field name="capacity_eggs">10000</field>
+        <field name="cleaning_days">1</field>
+    </record>
+
+    <record id="machine_demo_setter" model="hatchery.machine">
+        <field name="code">INC-DEMO-01</field>
+        <field name="model_id" ref="model_demo_setter"/>
+        <field name="plant_id" ref="plant_demo"/>
+        <field name="scada_id">SCADA-DEMO-INC-01</field>
+        <field name="state">loaded</field>
+        <field name="x_pos">22</field>
+        <field name="y_pos">28</field>
+    </record>
+    <record id="machine_demo_setter_2" model="hatchery.machine">
+        <field name="code">INC-DEMO-02</field>
+        <field name="model_id" ref="model_demo_setter"/>
+        <field name="plant_id" ref="plant_demo"/>
+        <field name="scada_id">SCADA-DEMO-INC-02</field>
+        <field name="state">free</field>
+        <field name="x_pos">48</field>
+        <field name="y_pos">28</field>
+    </record>
+    <record id="machine_demo_hatcher" model="hatchery.machine">
+        <field name="code">NAC-DEMO-01</field>
+        <field name="model_id" ref="model_demo_hatcher"/>
+        <field name="plant_id" ref="plant_demo"/>
+        <field name="scada_id">SCADA-DEMO-NAC-01</field>
+        <field name="state">cleaning</field>
+        <field name="x_pos">74</field>
+        <field name="y_pos">62</field>
+    </record>
+    <record id="machine_demo_chamber" model="hatchery.machine">
+        <field name="code">CAM-DEMO-01</field>
+        <field name="model_id" ref="model_demo_chamber"/>
+        <field name="plant_id" ref="plant_demo"/>
+        <field name="scada_id">SCADA-DEMO-CAM-01</field>
+        <field name="state">maintenance</field>
+        <field name="x_pos">22</field>
+        <field name="y_pos">72</field>
+    </record>
+
+    <record id="variable_temp" model="hatchery.variable">
+        <field name="code">temp</field>
+        <field name="unit">°C</field>
+    </record>
+    <record id="variable_rh" model="hatchery.variable">
+        <field name="code">rh</field>
+        <field name="unit">%</field>
+    </record>
+    <record id="variable_co2" model="hatchery.variable">
+        <field name="code">co2</field>
+        <field name="unit">ppm</field>
+    </record>
+    <record id="variable_turn" model="hatchery.variable">
+        <field name="code">turn</field>
+        <field name="unit">°</field>
+    </record>
+    <record id="variable_fan" model="hatchery.variable">
+        <field name="code">fan</field>
+    </record>
+    <record id="variable_valve" model="hatchery.variable">
+        <field name="code">valve</field>
+    </record>
+
+    <record id="sensor_demo_temp" model="hatchery.sensor">
+        <field name="machine_id" ref="machine_demo_setter"/>
+        <field name="variable_id" ref="variable_temp"/>
+        <field name="scada_tag">TAG-DEMO-INC-01-TEMP</field>
+        <field name="unit">°C</field>
+        <field name="scale">1</field>
+        <field name="offset">0</field>
+        <field name="min_alarm">35</field>
+        <field name="min_ok">36.5</field>
+        <field name="max_ok">38.2</field>
+        <field name="max_alarm">39.5</field>
+    </record>
+    <record id="sensor_demo_rh" model="hatchery.sensor">
+        <field name="machine_id" ref="machine_demo_setter"/>
+        <field name="variable_id" ref="variable_rh"/>
+        <field name="scada_tag">TAG-DEMO-INC-01-RH</field>
+        <field name="unit">%</field>
+        <field name="scale">1</field>
+        <field name="offset">0</field>
+        <field name="min_alarm">40</field>
+        <field name="min_ok">50</field>
+        <field name="max_ok">65</field>
+        <field name="max_alarm">80</field>
+    </record>
+    <record id="sensor_demo_co2" model="hatchery.sensor">
+        <field name="machine_id" ref="machine_demo_setter"/>
+        <field name="variable_id" ref="variable_co2"/>
+        <field name="scada_tag">TAG-DEMO-INC-01-CO2</field>
+        <field name="unit">ppm</field>
+        <field name="scale">1</field>
+        <field name="offset">0</field>
+        <field name="min_alarm">0</field>
+        <field name="min_ok">400</field>
+        <field name="max_ok">3500</field>
+        <field name="max_alarm">5000</field>
+    </record>
+
+    <record id="species_demo" model="hatchery.species">
+        <field name="name">Ave de demostración</field>
+        <field name="incubation_days">21</field>
+        <field name="candling_days">10,18</field>
+    </record>
+
+    <record id="program_demo" model="hatchery.program">
+        <field name="species_id" ref="species_demo"/>
+        <field name="days_setter">18</field>
+        <field name="days_hatcher">3</field>
+    </record>
+    <record id="program_step_demo_setter" model="hatchery.program.step">
+        <field name="program_id" ref="program_demo"/>
+        <field name="day_from">0</field>
+        <field name="day_to">18</field>
+        <field name="temp_sp">37.7</field>
+        <field name="rh_sp">55</field>
+        <field name="co2_max">3000</field>
+    </record>
+    <record id="program_step_demo_hatcher" model="hatchery.program.step">
+        <field name="program_id" ref="program_demo"/>
+        <field name="day_from">18</field>
+        <field name="day_to">21</field>
+        <field name="temp_sp">37.2</field>
+        <field name="rh_sp">65</field>
+        <field name="co2_max">4000</field>
+    </record>
+</odoo>

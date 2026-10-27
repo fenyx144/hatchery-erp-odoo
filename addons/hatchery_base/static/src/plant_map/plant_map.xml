@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hatchery_base.PlantMap">
+        <div class="o_hatchery_plant_map_action d-flex flex-column h-100">
+            <div class="o_hatchery_plant_map_toolbar d-flex align-items-center gap-3 p-3">
+                <label class="fw-bold mb-0" for="hatchery_plant_filter">Planta</label>
+                <select id="hatchery_plant_filter" class="form-select w-auto" t-on-change="onPlantChange">
+                    <t t-foreach="state.plants" t-as="plant" t-key="plant.id">
+                        <option t-att-value="plant.id" t-att-selected="plant.id === state.plantId" t-esc="plant.name"/>
+                    </t>
+                </select>
+                <span class="text-muted" t-esc="state.machines.length + ' máquinas'"/>
+            </div>
+            <div class="o_hatchery_plant_map">
+                <t t-foreach="state.machines" t-as="machine" t-key="machine.id">
+                    <div t-attf-class="o_hatchery_machine o_hatchery_state_{{machine.state}}" t-att-style="machineStyle(machine)">
+                        <strong t-esc="machine.code"/>
+                        <span t-esc="stateLabel(machine.state)"/>
+                    </div>
+                </t>
+                <p t-if="!state.machines.length" class="text-muted p-4 mb-0">No hay máquinas en esta planta.</p>
+            </div>
+            <ul class="o_hatchery_legend">
+                <li class="o_hatchery_state_free">Libre</li>
+                <li class="o_hatchery_state_loaded">Cargada</li>
+                <li class="o_hatchery_state_cleaning">Limpieza</li>
+                <li class="o_hatchery_state_maintenance">Mantenimiento</li>
+            </ul>
+        </div>
+    </t>
+</templates>
