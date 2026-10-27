@@ -1,6 +1,6 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0.html).
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 from .selection import MACHINE_KINDS, MACHINE_STATES
@@ -89,7 +89,7 @@ class HatcheryMachine(models.Model):
             if key in seen or self.search_count(
                 [("plant_id", "=", plant_id), ("scada_id", "=", scada_id)]
             ):
-                raise ValidationError(_("El identificador SCADA ya existe en esta planta."))
+                raise ValidationError(self.env._("El identificador SCADA ya existe en esta planta."))
             seen.add(key)
 
     def _check_scada_write(self, vals):
@@ -106,4 +106,4 @@ class HatcheryMachine(models.Model):
                 ]
             )
             if duplicate:
-                raise ValidationError(_("El identificador SCADA ya existe en esta planta."))
+                raise ValidationError(self.env._("El identificador SCADA ya existe en esta planta."))

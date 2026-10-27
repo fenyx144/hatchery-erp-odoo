@@ -1,6 +1,6 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0.html).
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -55,7 +55,7 @@ class HatcherySensor(models.Model):
                 sensor.min_alarm < sensor.min_ok < sensor.max_ok < sensor.max_alarm
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Los umbrales deben cumplir: alarma mínima < mínimo aceptable "
                         "< máximo aceptable < alarma máxima."
                     )

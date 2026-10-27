@@ -1,6 +1,6 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0.html).
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 from .selection import MACHINE_KINDS
@@ -34,4 +34,6 @@ class HatcheryMachineModel(models.Model):
     def _check_capacity_eggs(self):
         for record in self:
             if record.capacity_eggs <= 0:
-                raise ValidationError(_("La capacidad en huevos debe ser mayor que cero."))
+                raise ValidationError(
+                    self.env._("La capacidad en huevos debe ser mayor que cero.")
+                )

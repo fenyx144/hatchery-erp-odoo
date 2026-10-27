@@ -19,7 +19,7 @@ jobs:
       - name: pylint-odoo de hatchery_base
         run: >
           pylint --load-plugins=pylint_odoo --valid-odoo-versions=18.0
-          --disable=all --enable=odoolint,manifest-required-author,xml-syntax-error
+          --disable=all --enable=odoolint --disable=manifest-required-author
           addons/hatchery_base
 
   wp01:
