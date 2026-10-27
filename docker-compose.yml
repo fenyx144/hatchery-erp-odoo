@@ -1,0 +1,205 @@
+# Referencia: doc/ficha_tecnica.md sección 2.2 (WP-01).
+# db y tsdb solo en la red interna. Único puerto de aplicación: nginx :443.
+# El simulador publica :8090, como indica la ficha.
+
+name: hatchery
+
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: odoo
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_pw
+      POSTGRES_DB: postgres
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    secrets:
+      - db_pw
+    networks:
+      - data
+    mem_limit: 512m
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U odoo -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+
+  tsdb:
+    image: timescale/timescaledb:2.17.2-pg16
+    environment:
+      POSTGRES_USER: ts
+      POSTGRES_PASSWORD_FILE: /run/secrets/ts_pw
+      POSTGRES_DB: telemetry
+    volumes:
+      - ts_data:/var/lib/postgresql/data
+    secrets:
+      - ts_pw
+    networks:
+      - data
+    mem_limit: 512m
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ts -d telemetry"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+
+  odoo:
+    image: odoo:18.0
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      HOST: db
+      USER: odoo
+      PASSWORD_FILE: /run/secrets/db_pw
+    volumes:
+      - ./addons:/mnt/extra-addons
+      - odoo_data:/var/lib/odoo
+      - ./config/odoo.conf:/etc/odoo/odoo.conf:ro
+    secrets:
+      - db_pw
+    networks:
+      - data
+      - edge
+    mem_limit: 1536m
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python3",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8069/web/health', timeout=5)",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 40s
+
+  analytics:
+    build: ./analytics
+    depends_on:
+      tsdb:
+        condition: service_healthy
+      odoo:
+        condition: service_healthy
+    environment:
+      TSDB_DSN_FILE: /run/secrets/ts_ro_dsn
+      ODOO_URL: http://odoo:8069
+      LLM_PROVIDER: ${LLM_PROVIDER:-}
+    secrets:
+      - ts_ro_dsn
+    networks:
+      - data
+      - edge
+    mem_limit: 256m
+    read_only: true
+    tmpfs:
+      - /tmp
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/v1/health', timeout=5)",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+
+  connector:
+    build: ./connector
+    environment:
+      SOURCE: modbus
+      API_URL: http://analytics:8000/api/v1
+      MODBUS_HOST: simulator
+      MODBUS_PORT: "5020"
+      BATCH_SIZE: "2000"
+      BATCH_SECONDS: "5"
+      PYTHONDONTWRITEBYTECODE: "1"
+    volumes:
+      - connector_queue:/data
+    networks:
+      - edge
+    mem_limit: 128m
+    read_only: true
+    tmpfs:
+      - /tmp
+    healthcheck:
+      test: ["CMD-SHELL", "test -f /tmp/healthy"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 5s
+
+  simulator:
+    build: ./simulator
+    ports:
+      - "8090:8090"
+    environment:
+      PYTHONDONTWRITEBYTECODE: "1"
+    networks:
+      - edge
+    mem_limit: 128m
+    read_only: true
+    tmpfs:
+      - /tmp
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8090/health', timeout=5)",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 5s
+
+  nginx:
+    image: nginx:1.27
+    ports:
+      - "443:443"
+    depends_on:
+      odoo:
+        condition: service_healthy
+      analytics:
+        condition: service_healthy
+      simulator:
+        condition: service_healthy
+    volumes:
+      - ./config/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./secrets/nginx.crt:/etc/nginx/certs/nginx.crt:ro
+      - ./secrets/nginx.key:/etc/nginx/certs/nginx.key:ro
+    networks:
+      - edge
+    mem_limit: 128m
+    healthcheck:
+      test: ["CMD", "bash", "-c", ": > /dev/tcp/127.0.0.1/443"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 5s
+
+volumes:
+  db_data: {}
+  ts_data: {}
+  odoo_data: {}
+  connector_queue: {}
+
+secrets:
+  db_pw:
+    file: ./secrets/db_pw
+  ts_pw:
+    file: ./secrets/ts_pw
+  ts_ro_dsn:
+    file: ./secrets/ts_ro_dsn
+
+networks:
+  data:
+    internal: true
+  edge: {}
