@@ -13,6 +13,9 @@ fi
 if [[ ! -s secrets/ts_pw ]]; then
   openssl rand -hex 24 > secrets/ts_pw
 fi
+if [[ ! -s secrets/odoo_admin_passwd ]]; then
+  openssl rand -hex 24 > secrets/odoo_admin_passwd
+fi
 if [[ ! -s secrets/ts_ro_dsn ]]; then
   # Formato no definido en la ficha. URI libpq; el rol ts_ro no se crea en WP-01.
   ro_pw="$(openssl rand -hex 24)"
@@ -54,13 +57,16 @@ fi
 
 # Postgres arranca como root y puede leer 0600. Odoo y analytics no: el secreto
 # se monta con el modo del archivo del host.
-chmod 644 secrets/db_pw secrets/ts_pw secrets/ts_ro_dsn secrets/nginx.crt secrets/dev-ca.crt
+chmod 644 secrets/db_pw secrets/ts_pw secrets/ts_ro_dsn secrets/odoo_admin_passwd \
+  secrets/nginx.crt secrets/dev-ca.crt
 chmod 600 secrets/nginx.key secrets/dev-ca.key
 
-if command -v sudo >/dev/null 2>&1; then
-  sudo cp secrets/dev-ca.crt /usr/local/share/ca-certificates/hatchery-dev-ca.crt
-  sudo update-ca-certificates >/dev/null
+# La instalación en el almacén del sistema es opcional y propia de Debian.
+# La prueba de WP-01 usa curl --cacert y no depende de este paso.
+if command -v sudo >/dev/null 2>&1 \
+  && sudo -n cp secrets/dev-ca.crt /usr/local/share/ca-certificates/hatchery-dev-ca.crt \
+  && sudo -n update-ca-certificates >/dev/null; then
+  :
 else
-  echo "sudo no está disponible; curl no confiará en la CA de desarrollo" >&2
-  exit 1
+  echo "aviso: no se instaló la CA en el almacén del sistema. La prueba usa: curl -f --cacert secrets/dev-ca.crt https://localhost/api/v1/health" >&2
 fi

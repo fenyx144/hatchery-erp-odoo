@@ -1,6 +1,6 @@
 # Preguntas abiertas (WP-01)
 
-Fuente: `doc/ficha_tecnica.md` versión 1.3. Aquí solo entra lo que este paquete no pudo cerrar sin inventar un requisito.
+Fuente: `docs/ficha_tecnica.md` versión 1.3. Aquí solo entra lo que este paquete no pudo cerrar sin inventar un requisito.
 
 ## Afectan a WP-01
 
@@ -14,11 +14,11 @@ Fuente: `doc/ficha_tecnica.md` versión 1.3. Aquí solo entra lo que este paquet
 
 5. **Secreto de `ts_writer`.** La sección 2.3 pide ese usuario de solo INSERT. La sección 2.2 no declara un archivo de secreto. No se creó el rol ni una contraseña.
 
-6. **Certificado TLS de producción.** No está definido. `make up` genera una CA local, no versionada, y la instala en el almacén del sistema para que `curl -f https://localhost/api/v1/health` confíe en ella. No es el certificado de la planta.
+6. **Certificado TLS de producción.** No está definido. `make up` genera una CA local, no versionada. Instalarla en el almacén del sistema es opcional y puede fallar; la prueba usa `curl -f --cacert secrets/dev-ca.crt https://localhost/api/v1/health`. No es el certificado de la planta.
 
 7. **Límite de 20 req/s por token (sección 2.3).** `hatchery.device.token` todavía no existe. Nginx aplica 20 req/s por dirección IP, con una ráfaga de 5. Falta confirmar si ese sustituto sirve hasta que existan los tokens.
 
-8. **Clave maestra de Odoo (`admin_passwd`).** No está entre los secretos de la sección 2.2. No se escribió una clave en el repositorio. Queda el valor por defecto de la imagen.
+8. **Clave maestra de Odoo (`admin_passwd`).** En desarrollo la genera `scripts/ensure-dev-secrets.sh` en `secrets/odoo_admin_passwd` y el arranque la inyecta. No se usa la clave por defecto de la imagen ni se versiona. Sigue abierto cómo custodiarla y rotarla en la planta.
 
 9. **Nombre de la base de la aplicación Odoo.** La ficha fija `POSTGRES_DB=postgres` para el motor. No dice qué base debe crear Odoo. WP-01 no inicializa una base de aplicación.
 

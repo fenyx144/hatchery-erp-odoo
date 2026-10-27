@@ -2,6 +2,7 @@
 secrets/db_pw
 secrets/ts_pw
 secrets/ts_ro_dsn
+secrets/odoo_admin_passwd
 secrets/*.crt
 secrets/*.key
 secrets/*.csr

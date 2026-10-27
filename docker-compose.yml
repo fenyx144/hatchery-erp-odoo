@@ -1,6 +1,6 @@
-# Referencia: doc/ficha_tecnica.md sección 2.2 (WP-01).
-# db y tsdb solo en la red interna. Único puerto de aplicación: nginx :443.
-# El simulador publica :8090, como indica la ficha.
+# Referencia: docs/ficha_tecnica.md sección 2.2 (WP-01).
+# db y tsdb solo en la red interna. Nginx publica 443.
+# El simulador publica solo 127.0.0.1:8090 (secciones 2.2 y 2.3).
 
 name: hatchery
 
@@ -54,12 +54,15 @@ services:
       HOST: db
       USER: odoo
       PASSWORD_FILE: /run/secrets/db_pw
+    entrypoint: ["/bin/bash", "/usr/local/bin/odoo-entrypoint.sh"]
     volumes:
       - ./addons:/mnt/extra-addons
       - odoo_data:/var/lib/odoo
       - ./config/odoo.conf:/etc/odoo/odoo.conf:ro
+      - ./config/odoo-entrypoint.sh:/usr/local/bin/odoo-entrypoint.sh:ro
     secrets:
       - db_pw
+      - odoo_admin_passwd
     networks:
       - data
       - edge
@@ -138,7 +141,7 @@ services:
   simulator:
     build: ./simulator
     ports:
-      - "8090:8090"
+      - "127.0.0.1:8090:8090"
     environment:
       PYTHONDONTWRITEBYTECODE: "1"
     networks:
@@ -198,6 +201,8 @@ secrets:
     file: ./secrets/ts_pw
   ts_ro_dsn:
     file: ./secrets/ts_ro_dsn
+  odoo_admin_passwd:
+    file: ./secrets/odoo_admin_passwd
 
 networks:
   data:

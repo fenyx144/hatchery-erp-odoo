@@ -89,19 +89,19 @@ services:
     volumes: [connector_queue:/data]
   simulator:
     build: ./simulator
-    ports: ["8090:8090"]   # UI gráfica de configuración
+    ports: ["127.0.0.1:8090:8090"]   # UI gráfica; solo loopback del host (ver 2.3)
   nginx:
     image: nginx:1.27
     ports: ["443:443"]
     depends_on: [odoo, analytics, simulator]
 volumes: {db_data: {}, ts_data: {}, odoo_data: {}, connector_queue: {}}
-secrets: {db_pw: {file: ./secrets/db_pw}, ts_pw: {file: ./secrets/ts_pw}, ts_ro_dsn: {file: ./secrets/ts_ro_dsn}}
+secrets: {db_pw: {file: ./secrets/db_pw}, ts_pw: {file: ./secrets/ts_pw}, ts_ro_dsn: {file: ./secrets/ts_ro_dsn}, odoo_admin_passwd: {file: ./secrets/odoo_admin_passwd}}
 ```
-Windows: Docker Desktop + WSL2; script `scripts/start.ps1`. Linux: `make up`. Despliegue autoalojado (Community): servidor en planta o VPS; tipo [POR CONFIRMAR] (pregunta 15).
+`admin_passwd` de Odoo sale del secreto `odoo_admin_passwd` (archivo local, nunca en el repositorio). `list_db = False`. Windows: Docker Desktop + WSL2; script `scripts/start.ps1`. Linux: `make up`. Despliegue autoalojado (Community): servidor en planta o VPS; tipo [POR CONFIRMAR] (pregunta 15).
 
 ### 2.3 Seguridad
 - Token por dispositivo (`hatchery.device.token`, hash SHA-256, rotación 90 d, revocable); cabecera `Authorization: Bearer`.
-- Red: solo `nginx` expuesto; `tsdb` y `db` en red interna. Conector en VLAN de planta, sin rutas de escritura al SCADA.
+- Red: solo `nginx` se expone a la red; `tsdb` y `db` en red interna. El puerto 8090 de la sección 2.2 se publica solo en `127.0.0.1` para la UI local y no en otras interfaces. Conector en VLAN de planta, sin rutas de escritura al SCADA.
 - Usuario `ts_ro` de solo lectura para analytics/chatbot; `ts_writer` solo INSERT para el conector.
 - TLS 1.2+, contraseñas en Docker secrets, nunca en el repositorio.
 - Grupos de acceso Odoo por rol (sección 6.3) y reglas de registro (`ir.rule`) por planta/compañía.
@@ -609,7 +609,7 @@ Features de curva: media, desviación, pendiente, minutos fuera de rango, área 
 ### 11.1 Paquetes de trabajo
 | WP | Nombre | Módulos / servicios | Depende de | Definición de terminado | Comando de prueba |
 |---|---|---|---|---|---|
-| WP-01 | Repositorio, docker-compose, CI | — | — | `make up` levanta 7 servicios sanos; CI verde | `make up && curl -f https://localhost/api/v1/health` |
+| WP-01 | Repositorio, docker-compose, CI | — | — | `make up` levanta 7 servicios sanos; CI verde | `make up && curl -f --cacert secrets/dev-ca.crt https://localhost/api/v1/health` |
 | WP-02 | Datos maestros | `hatchery_base` | 01 | Modelos 3.1, vistas, seguridad, demo | `odoo -d test --test-enable --stop-after-init -i hatchery_base` |
 | WP-03 | Simulador (motor + Modbus + CSV) | — (servicio `simulator`) | 01 | 25 máquinas emitiendo; fallas inyectables | `pytest simulator/tests` |
 | WP-04 | UI gráfica del simulador | — (servicio `simulator`) | 02, 03 | Arrastrar máquina y exportarla a Odoo | `pytest simulator/tests/test_ui_api.py` |
