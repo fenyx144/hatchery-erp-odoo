@@ -27,7 +27,7 @@ class HatcheryPlant(models.Model):
         tracking=True,
     )
     machine_ids = fields.One2many("hatchery.machine", "plant_id", string="Máquinas")
-    machine_count = fields.Integer(string="Máquinas", compute="_compute_kpis")
+    machine_count = fields.Integer(string="Total de máquinas", compute="_compute_kpis")
     machine_free_count = fields.Integer(string="Libres", compute="_compute_kpis")
     machine_loaded_count = fields.Integer(string="Cargadas", compute="_compute_kpis")
     machine_cleaning_count = fields.Integer(string="En limpieza", compute="_compute_kpis")

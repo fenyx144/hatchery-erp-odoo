@@ -3,7 +3,7 @@
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
-from .selection import MACHINE_KINDS, MACHINE_STATES
+from .selection import MACHINE_STATES
 
 
 class HatcheryMachine(models.Model):
@@ -21,12 +21,7 @@ class HatcheryMachine(models.Model):
         ondelete="restrict",
         tracking=True,
     )
-    kind = fields.Selection(
-        MACHINE_KINDS,
-        string="Tipo",
-        related="model_id.kind",
-        store=True,
-    )
+    kind = fields.Selection(related="model_id.kind", store=True, string="Tipo")
     plant_id = fields.Many2one(
         "hatchery.plant",
         string="Planta",
