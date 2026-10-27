@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hatchery_species_list" model="ir.ui.view">
+        <field name="name">hatchery.species.list</field>
+        <field name="model">hatchery.species</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="incubation_days"/>
+                <field name="candling_days"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hatchery_species_form" model="ir.ui.view">
+        <field name="name">hatchery.species.form</field>
+        <field name="model">hatchery.species</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Especie"/></h1>
+                    </div>
+                    <group>
+                        <field name="incubation_days"/>
+                        <field name="candling_days"/>
+                    </group>
+                    <notebook>
+                        <page string="Programas" name="programs">
+                            <field name="program_ids">
+                                <list>
+                                    <field name="days_setter"/>
+                                    <field name="days_hatcher"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hatchery_species_search" model="ir.ui.view">
+        <field name="name">hatchery.species.search</field>
+        <field name="model">hatchery.species</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hatchery_species" model="ir.actions.act_window">
+        <field name="name">Especies</field>
+        <field name="res_model">hatchery.species</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

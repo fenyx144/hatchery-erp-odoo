@@ -1,0 +1,67 @@
+.o_hatchery_plant_map_action {
+    background: #f7f8f6;
+}
+
+.o_hatchery_plant_map {
+    position: relative;
+    min-height: 640px;
+    margin: 0 16px 8px;
+    background:
+        linear-gradient(#e6ece7 1px, transparent 1px),
+        linear-gradient(90deg, #e6ece7 1px, transparent 1px);
+    background-size: 40px 40px;
+    background-color: #fff;
+    border: 1px solid #c5d0c8;
+    border-radius: 8px;
+}
+
+.o_hatchery_machine {
+    position: absolute;
+    min-width: 108px;
+    transform: translate(-50%, -50%);
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 13px;
+}
+
+.o_hatchery_state_free {
+    border-color: #1f7a4d;
+    color: #1f7a4d;
+}
+
+.o_hatchery_state_loaded {
+    border-color: #1d4f91;
+    color: #1d4f91;
+}
+
+.o_hatchery_state_cleaning {
+    border-color: #8a5a00;
+    color: #8a5a00;
+}
+
+.o_hatchery_state_maintenance {
+    border-color: #8d2a2a;
+    color: #8d2a2a;
+}
+
+.o_hatchery_legend {
+    display: flex;
+    gap: 16px;
+    list-style: none;
+    margin: 0 16px 16px;
+    padding: 0;
+}
+
+.o_hatchery_legend li {
+    padding: 2px 8px;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    background: #fff;
+    font-size: 12px;
+}

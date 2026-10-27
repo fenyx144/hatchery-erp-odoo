@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_hatchery_plant_map" model="ir.actions.client">
+        <field name="name">Mapa de planta</field>
+        <field name="tag">hatchery_base.plant_map</field>
+    </record>
+</odoo>

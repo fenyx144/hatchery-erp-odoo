@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hatchery_sensor_list" model="ir.ui.view">
+        <field name="name">hatchery.sensor.list</field>
+        <field name="model">hatchery.sensor</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="machine_id"/>
+                <field name="variable_id"/>
+                <field name="scada_tag"/>
+                <field name="unit"/>
+                <field name="scale"/>
+                <field name="offset"/>
+                <field name="min_alarm"/>
+                <field name="min_ok"/>
+                <field name="max_ok"/>
+                <field name="max_alarm"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hatchery_sensor_form" model="ir.ui.view">
+        <field name="name">hatchery.sensor.form</field>
+        <field name="model">hatchery.sensor</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="machine_id"/>
+                            <field name="variable_id"/>
+                            <field name="scada_tag"/>
+                            <field name="unit"/>
+                            <field name="scale"/>
+                            <field name="offset"/>
+                        </group>
+                        <group string="Umbrales">
+                            <field name="min_alarm"/>
+                            <field name="min_ok"/>
+                            <field name="max_ok"/>
+                            <field name="max_alarm"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hatchery_sensor_search" model="ir.ui.view">
+        <field name="name">hatchery.sensor.search</field>
+        <field name="model">hatchery.sensor</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="scada_tag"/>
+                <field name="machine_id"/>
+                <field name="variable_id"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_machine" string="Máquina" context="{'group_by': 'machine_id'}"/>
+                    <filter name="group_variable" string="Variable" context="{'group_by': 'variable_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hatchery_sensor" model="ir.actions.act_window">
+        <field name="name">Sensores</field>
+        <field name="res_model">hatchery.sensor</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

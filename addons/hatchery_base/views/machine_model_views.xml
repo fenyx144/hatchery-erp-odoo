@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hatchery_machine_model_list" model="ir.ui.view">
+        <field name="name">hatchery.machine.model.list</field>
+        <field name="model">hatchery.machine.model</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="brand"/>
+                <field name="model"/>
+                <field name="kind"/>
+                <field name="capacity_eggs"/>
+                <field name="trolleys"/>
+                <field name="trays_per_trolley"/>
+                <field name="eggs_per_tray"/>
+                <field name="cleaning_days"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hatchery_machine_model_form" model="ir.ui.view">
+        <field name="name">hatchery.machine.model.form</field>
+        <field name="model">hatchery.machine.model</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="model" placeholder="Modelo"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="brand"/>
+                            <field name="kind"/>
+                            <field name="capacity_eggs"/>
+                            <field name="cleaning_days"/>
+                        </group>
+                        <group>
+                            <field name="trolleys"/>
+                            <field name="trays_per_trolley"/>
+                            <field name="eggs_per_tray"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hatchery_machine_model_search" model="ir.ui.view">
+        <field name="name">hatchery.machine.model.search</field>
+        <field name="model">hatchery.machine.model</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="brand"/>
+                <field name="model"/>
+                <filter name="kind_setter" string="Incubadora" domain="[('kind', '=', 'setter')]"/>
+                <filter name="kind_hatcher" string="Nacedora" domain="[('kind', '=', 'hatcher')]"/>
+                <filter name="kind_chamber" string="Cámara" domain="[('kind', '=', 'chamber')]"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_kind" string="Tipo" context="{'group_by': 'kind'}"/>
+                    <filter name="group_brand" string="Marca" context="{'group_by': 'brand'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hatchery_machine_model" model="ir.actions.act_window">
+        <field name="name">Modelos de máquina</field>
+        <field name="res_model">hatchery.machine.model</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

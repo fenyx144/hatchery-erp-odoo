@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hatchery_program_list" model="ir.ui.view">
+        <field name="name">hatchery.program.list</field>
+        <field name="model">hatchery.program</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="species_id"/>
+                <field name="days_setter"/>
+                <field name="days_hatcher"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hatchery_program_form" model="ir.ui.view">
+        <field name="name">hatchery.program.form</field>
+        <field name="model">hatchery.program</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="species_id"/>
+                        <field name="days_setter"/>
+                        <field name="days_hatcher"/>
+                    </group>
+                    <notebook>
+                        <page string="Pasos" name="steps">
+                            <field name="step_ids">
+                                <list editable="bottom">
+                                    <field name="day_from"/>
+                                    <field name="day_to"/>
+                                    <field name="temp_sp"/>
+                                    <field name="rh_sp"/>
+                                    <field name="co2_max"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hatchery_program_search" model="ir.ui.view">
+        <field name="name">hatchery.program.search</field>
+        <field name="model">hatchery.program</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="species_id"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_species" string="Especie" context="{'group_by': 'species_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hatchery_program" model="ir.actions.act_window">
+        <field name="name">Programas</field>
+        <field name="res_model">hatchery.program</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_hatchery_program_step_list" model="ir.ui.view">
+        <field name="name">hatchery.program.step.list</field>
+        <field name="model">hatchery.program.step</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="program_id"/>
+                <field name="day_from"/>
+                <field name="day_to"/>
+                <field name="temp_sp"/>
+                <field name="rh_sp"/>
+                <field name="co2_max"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hatchery_program_step_form" model="ir.ui.view">
+        <field name="name">hatchery.program.step.form</field>
+        <field name="model">hatchery.program.step</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="program_id"/>
+                        <field name="day_from"/>
+                        <field name="day_to"/>
+                        <field name="temp_sp"/>
+                        <field name="rh_sp"/>
+                        <field name="co2_max"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hatchery_program_step_search" model="ir.ui.view">
+        <field name="name">hatchery.program.step.search</field>
+        <field name="model">hatchery.program.step</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="program_id"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_program" string="Programa" context="{'group_by': 'program_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hatchery_program_step" model="ir.actions.act_window">
+        <field name="name">Pasos de programa</field>
+        <field name="res_model">hatchery.program.step</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

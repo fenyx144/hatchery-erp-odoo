@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hatchery_machine_list" model="ir.ui.view">
+        <field name="name">hatchery.machine.list</field>
+        <field name="model">hatchery.machine</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="code"/>
+                <field name="plant_id"/>
+                <field name="model_id"/>
+                <field name="kind"/>
+                <field name="state"/>
+                <field name="scada_id"/>
+                <field name="x_pos"/>
+                <field name="y_pos"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hatchery_machine_form" model="ir.ui.view">
+        <field name="name">hatchery.machine.form</field>
+        <field name="model">hatchery.machine</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="code" placeholder="Código"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="plant_id"/>
+                            <field name="model_id"/>
+                            <field name="kind"/>
+                            <field name="state"/>
+                        </group>
+                        <group>
+                            <field name="scada_id"/>
+                            <field name="x_pos"/>
+                            <field name="y_pos"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Sensores" name="sensors">
+                            <field name="sensor_ids">
+                                <list editable="bottom">
+                                    <field name="variable_id"/>
+                                    <field name="scada_tag"/>
+                                    <field name="unit"/>
+                                    <field name="scale"/>
+                                    <field name="offset"/>
+                                    <field name="min_alarm"/>
+                                    <field name="min_ok"/>
+                                    <field name="max_ok"/>
+                                    <field name="max_alarm"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hatchery_machine_kanban" model="ir.ui.view">
+        <field name="name">hatchery.machine.kanban</field>
+        <field name="model">hatchery.machine</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <field name="code"/>
+                <field name="state"/>
+                <field name="plant_id"/>
+                <field name="kind"/>
+                <field name="model_id"/>
+                <templates>
+                    <t t-name="card">
+                        <field name="code" class="fw-bold"/>
+                        <field name="plant_id"/>
+                        <field name="kind"/>
+                        <field name="model_id"/>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_hatchery_machine_search" model="ir.ui.view">
+        <field name="name">hatchery.machine.search</field>
+        <field name="model">hatchery.machine</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="code"/>
+                <field name="plant_id"/>
+                <field name="model_id"/>
+                <field name="scada_id"/>
+                <field name="kind"/>
+                <separator/>
+                <filter name="state_free" string="Libre" domain="[('state', '=', 'free')]"/>
+                <filter name="state_loaded" string="Cargada" domain="[('state', '=', 'loaded')]"/>
+                <filter name="state_cleaning" string="Limpieza" domain="[('state', '=', 'cleaning')]"/>
+                <filter name="state_maintenance" string="Mantenimiento" domain="[('state', '=', 'maintenance')]"/>
+                <separator/>
+                <filter name="kind_setter" string="Incubadora" domain="[('kind', '=', 'setter')]"/>
+                <filter name="kind_hatcher" string="Nacedora" domain="[('kind', '=', 'hatcher')]"/>
+                <filter name="kind_chamber" string="Cámara" domain="[('kind', '=', 'chamber')]"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_plant" string="Planta" context="{'group_by': 'plant_id'}"/>
+                    <filter name="group_kind" string="Tipo" context="{'group_by': 'kind'}"/>
+                    <filter name="group_state" string="Estado" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hatchery_machine" model="ir.actions.act_window">
+        <field name="name">Máquinas</field>
+        <field name="res_model">hatchery.machine</field>
+        <field name="view_mode">kanban,list,form</field>
+    </record>
+</odoo>
