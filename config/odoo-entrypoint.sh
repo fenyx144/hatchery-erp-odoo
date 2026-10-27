@@ -9,7 +9,7 @@ if [[ ! -s "$secret" ]]; then
 fi
 
 umask 077
-install -d /tmp/odoo
+install -d -m 700 /tmp/odoo
 grep -v -E '^[[:space:]]*admin_passwd[[:space:]]*=' /etc/odoo/odoo.conf > /tmp/odoo/odoo.conf
 printf 'admin_passwd = %s\n' "$(<"$secret")" >> /tmp/odoo/odoo.conf
 chmod 600 /tmp/odoo/odoo.conf
