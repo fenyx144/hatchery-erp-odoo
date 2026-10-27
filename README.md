@@ -23,4 +23,4 @@ docker compose run --rm --no-deps --entrypoint /entrypoint.sh \
   odoo odoo -d test --test-enable --stop-after-init -i hatchery_base --test-tags /hatchery_base
 ```
 
-El comando de la tabla 11.1 no lleva `--test-tags`. La CI usa la etiqueta para no ejecutar las pruebas de Odoo que piden Chrome.
+El comando de la tabla 11.1 no lleva `--test-tags`. En la imagen `odoo:18.0` también corre las pruebas de `base` y `mail`. Esas fallan en `TestConfigManager` y `upgrade_code` por el `odoo.conf` de la imagen, no por este módulo. La CI ejecuta solo las pruebas de `hatchery_base`.
