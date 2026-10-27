@@ -8,8 +8,10 @@ if [[ ! -s "$secret" ]]; then
   exit 1
 fi
 
-install -d -m 755 /tmp/odoo
+umask 077
+install -d /tmp/odoo
 grep -v -E '^[[:space:]]*admin_passwd[[:space:]]*=' /etc/odoo/odoo.conf > /tmp/odoo/odoo.conf
 printf 'admin_passwd = %s\n' "$(<"$secret")" >> /tmp/odoo/odoo.conf
+chmod 600 /tmp/odoo/odoo.conf
 export ODOO_RC=/tmp/odoo/odoo.conf
 exec /entrypoint.sh odoo

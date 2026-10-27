@@ -64,8 +64,8 @@ chmod 600 secrets/nginx.key secrets/dev-ca.key
 # La instalación en el almacén del sistema es opcional y propia de Debian.
 # La prueba de WP-01 usa curl --cacert y no depende de este paso.
 if command -v sudo >/dev/null 2>&1 \
-  && sudo -n cp secrets/dev-ca.crt /usr/local/share/ca-certificates/hatchery-dev-ca.crt \
-  && sudo -n update-ca-certificates >/dev/null; then
+  && sudo -n cp secrets/dev-ca.crt /usr/local/share/ca-certificates/hatchery-dev-ca.crt 2>/dev/null \
+  && sudo -n update-ca-certificates >/dev/null 2>&1; then
   :
 else
   echo "aviso: no se instaló la CA en el almacén del sistema. La prueba usa: curl -f --cacert secrets/dev-ca.crt https://localhost/api/v1/health" >&2
